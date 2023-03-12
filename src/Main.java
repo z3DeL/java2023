@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
         System.out.println("Введите имя");
         String name = scanner.nextLine();
         System.out.println("Привет " + name);
@@ -15,6 +15,6 @@ public class Main {
                 System.out.print("sin(" + angle + "\u00B0) = " + result + " ");
             angle +=5;}
             System.out.print("\n");
-        }
+        }*/
     }
 }
