@@ -1,10 +1,8 @@
 package education;
 
-import org.yaml.snakeyaml.scanner.Scanner;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.Stream;
 
 public class Student {
     private String name;
@@ -21,25 +19,16 @@ public class Student {
         return name;
     }
 
-    private void setName(String name) {
-        this.name = name;
-    }
 
     public ArrayList<Mark> getMarks() {
         return marks;
     }
 
-    private void setMarks(ArrayList<Mark> marks) {
-        this.marks = marks;
-    }
 
     public ArrayList<Task> getTasksToCheck() {
         return tasksToCheck;
     }
 
-    private void setTasksToComplete(ArrayList<Task> tasksToComplete) {
-        this.tasksToCheck = tasksToComplete;
-    }
     private static double getRandomIntegerBetweenRange(double min, double max){
         return (int)(java.lang.Math.random()*((max-min)+1))+min;
     }

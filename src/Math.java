@@ -9,3 +9,4 @@ public class Math {
         return Integer.compare(n, 0);
     }
 }
+    ч

@@ -11,29 +11,19 @@ public class Task {
         this.taskPoint = taskPoint;
     }
 
-    private String getSubject() {
+    public String getSubject() {
         return subject;
     }
 
-    private void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    private String getType() {
+    public String getType() {
         return type;
     }
 
-    private void setType(String type) {
-        this.type = type;
-    }
 
-    private String getTaskPoint() {
+    public String getTaskPoint() {
         return taskPoint;
     }
 
-    private void setTaskPoint(String taskPoint) {
-        this.taskPoint = taskPoint;
-    }
     public void taskMailing(Student[] students){
         for (Student student: students){
             student.addTask(this);}
