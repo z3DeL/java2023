@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+/** класс хранилище всех уникальных значений в строке, столбце или блоке */
 @Getter
 @Setter(AccessLevel.PRIVATE)
 @AllArgsConstructor

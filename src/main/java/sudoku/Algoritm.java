@@ -2,6 +2,7 @@ package sudoku;
 
 import java.util.Iterator;
 import java.util.Set;
+/** основное наше решение */
 
 public class Algoritm {
     private Cell[][] matrix;
@@ -11,8 +12,8 @@ public class Algoritm {
     private int valuesSet;
     private int valuesSetBefore;
 
-    public Cell[] rowGet(int j, Cell[][] matrix){
-        Cell[]  row =  new Cell[j];
+    public static Cell[] rowGet(int j, Cell[][] matrix){
+        Cell[]  row =  new Cell[9];
         for (int i = 0; i < matrix.length; i++){
             row[i] = matrix[i][j];
         }
@@ -35,6 +36,7 @@ public class Algoritm {
     public Cell[] columnGet(int i,Cell[][] matrix){
         return matrix[i];
     }
+    /** Возвращает множество значений, которых нет в нашей строке ( столбце, блоке) */
     public Set<Integer> possibleVal(Cell[] arrCell){
       Set<Integer> impossible = null;
       for (Cell cell: arrCell){
@@ -48,6 +50,7 @@ public class Algoritm {
       }
       return possible;
     }
+    /** для отдельной клетки на поле заполняет ее массив возможных значений */
     public  void setPreValuesForCell(Cell cell){
         if (!cell.isDefaultValue()){
             Set<Integer> possibleValue = null;
@@ -68,12 +71,26 @@ public class Algoritm {
             }
         }
     }
-
+    /** заполняет возможные значения для всего поля*/
     public void setPreValuesForAll(){
         for (Cell[] row: matrix){
             for (Cell cell: row){
                 setPreValuesForCell(cell);
             }
         }
+    }
+    /** создает из двумерного массива чисел, массив ячеек, служит для удобства ввода */
+    public static Cell[][] createMatrix(int[][] table){
+        Cell[][] matrix = new Cell[9][9];
+        for(int i = 0; i<table.length;i++){
+            for (int j = 0; j<table.length;j++){
+                boolean isDefaultValue = true;
+                if (table[i][j] == 0){
+                    isDefaultValue = false;
+                }
+                matrix[i][j] = new Cell(null,table[i][j],new Position(i,j,i%3+3*(j%3)),isDefaultValue);
+            }
+        }
+        return matrix;
     }
 }
