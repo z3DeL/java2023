@@ -3,6 +3,9 @@ package sudoku;
 import org.junit.jupiter.api.Assertions;
 
 public class PreValuesTest {
+    Algoritm testTable = new Algoritm();
+
+
 
     @org.junit.jupiter.api.Test
     public void CreateMatrix(){
@@ -106,7 +109,18 @@ public class PreValuesTest {
         matrix[8][6] = new Cell(null,9,new Position(8,6,8),true);
         matrix[8][7] = new Cell(null,6,new Position(8,7,8),true);
         matrix[8][8] = new Cell(null,1,new Position(8,8,8),true);
-        Assertions.assertEquals(matrix,Algoritm.createMatrix(table));
+        testTable.createMatrix(table);
+        Cell[][] createdMatrix = testTable.getMatrix();
+        for (int i = 0; i<9; i++){
+            for (int j = 0; j<9; j++){
+                Assertions.assertEquals(matrix[i][j].getValue(),createdMatrix[i][j].getValue());
+                Assertions.assertEquals(matrix[i][j].isDefaultValue(),createdMatrix[i][j].isDefaultValue());
+                Assertions.assertEquals(matrix[i][j].getPossibleVal(),createdMatrix[i][j].getPossibleVal());
+                Assertions.assertEquals(matrix[i][j].getPosition().getColumn(),createdMatrix[i][j].getPosition().getColumn());
+                Assertions.assertEquals(matrix[i][j].getPosition().getRow(),createdMatrix[i][j].getPosition().getRow());
+                Assertions.assertEquals(matrix[i][j].getPosition().getBlock(),createdMatrix[i][j].getPosition().getBlock());
+            }
+        }
     }
     @org.junit.jupiter.api.Test
     public void getRow(){
@@ -120,7 +134,7 @@ public class PreValuesTest {
         table[6] = new int[] {0,9,0,0,0,0,0,0,0};
         table[7] = new int[] {2,0,8,3,9,0,0,0,0};
         table[8] = new int[] {7,0,0,2,0,0,9,6,1};
-
+    testTable.createMatrix(table);
     Cell[] row = new Cell[9];
     row[0] = new Cell(null,0,new Position(0,0,0),false);
     row[1] = new Cell(null,0,new Position(0,1,0),false);
@@ -131,5 +145,84 @@ public class PreValuesTest {
     row[6] = new Cell(null,0,new Position(0,6,2),false);
     row[7] = new Cell(null,4,new Position(0,7,2),true);
     row[8] = new Cell(null,0,new Position(0,8,2),false);
-    Assertions.assertEquals(row,Algoritm.rowGet(0,Algoritm.createMatrix(table)));}
+    Cell[] rowGets = Algoritm.rowGet(0, testTable.getMatrix());
+        for (int i = 0; i<9; i++){
+            Assertions.assertEquals(row[i].getValue(),rowGets[i].getValue());
+            Assertions.assertEquals(row[i].isDefaultValue(),rowGets[i].isDefaultValue());
+            Assertions.assertEquals(row[i].getPossibleVal(),rowGets[i].getPossibleVal());
+            Assertions.assertEquals(row[i].getPosition().getColumn(),rowGets[i].getPosition().getColumn());
+            Assertions.assertEquals(row[i].getPosition().getRow(),rowGets[i].getPosition().getRow());
+            Assertions.assertEquals(row[i].getPosition().getBlock(),rowGets[i].getPosition().getBlock());
+        }
+    }
+    @org.junit.jupiter.api.Test
+    public void getColumn(){
+        int[][] table = new int[9][9];
+        table[0] = new int[] {0,0,0,6,7,2,0,4,0};
+        table[1] = new int[] {0,2,7,5,0,9,0,3,6};
+        table[2] = new int[] {6,4,0,0,3,1,0,7,0};
+        table[3] = new int[] {0,7,0,9,2,0,0,1,0};
+        table[4] = new int[] {1,0,5,0,6,3,2,0,0};
+        table[5] = new int[] {0,6,2,4,0,0,7,0,0};
+        table[6] = new int[] {0,9,0,0,0,0,0,0,0};
+        table[7] = new int[] {2,0,8,3,9,0,0,0,0};
+        table[8] = new int[] {7,0,0,2,0,0,9,6,1};
+        testTable.createMatrix(table);
+
+        Cell[] column = new Cell[9];
+        column[0] = new Cell(null,0,new Position(0,0,0),false);
+        column[1] = new Cell(null,0,new Position(1,0,0),false);
+        column[2] = new Cell(null,6,new Position(2,0,0),true);
+        column[3] = new Cell(null,0,new Position(3,0,3),false);
+        column[4] = new Cell(null,1,new Position(4,0,3),true);
+        column[5] = new Cell(null,0,new Position(5,0,3),false);
+        column[6] = new Cell(null,0,new Position(6,0,6),false);
+        column[7] = new Cell(null,2,new Position(7,0,6),true);
+        column[8] = new Cell(null,7,new Position(8,0,6),true);
+        Cell[] columnGets = Algoritm.columnGet(0, testTable.getMatrix());
+        for (int i = 0; i<9; i++){
+            Assertions.assertEquals(column[i].getValue(),columnGets[i].getValue());
+            Assertions.assertEquals(column[i].isDefaultValue(),columnGets[i].isDefaultValue());
+            Assertions.assertEquals(column[i].getPossibleVal(),columnGets[i].getPossibleVal());
+            Assertions.assertEquals(column[i].getPosition().getColumn(),columnGets[i].getPosition().getColumn());
+            Assertions.assertEquals(column[i].getPosition().getRow(),columnGets[i].getPosition().getRow());
+            Assertions.assertEquals(column[i].getPosition().getBlock(),columnGets[i].getPosition().getBlock());
+        }
+    }
+    @org.junit.jupiter.api.Test
+    public void getBlock(){
+        int[][] table = new int[9][9];
+        table[0] = new int[] {0,0,0,6,7,2,0,4,0};
+        table[1] = new int[] {0,2,7,5,0,9,0,3,6};
+        table[2] = new int[] {6,4,0,0,3,1,0,7,0};
+        table[3] = new int[] {0,7,0,9,2,0,0,1,0};
+        table[4] = new int[] {1,0,5,0,6,3,2,0,0};
+        table[5] = new int[] {0,6,2,4,0,0,7,0,0};
+        table[6] = new int[] {0,9,0,0,0,0,0,0,0};
+        table[7] = new int[] {2,0,8,3,9,0,0,0,0};
+        table[8] = new int[] {7,0,0,2,0,0,9,6,1};
+        testTable.createMatrix(table);
+
+        Cell[] block = new Cell[9];
+        block[0] = new Cell(null,0,new Position(6,0,6),false);
+        block[1] = new Cell(null,9,new Position(6,1,6),true);
+        block[2] = new Cell(null,0,new Position(6,2,6),false);
+        block[3] = new Cell(null,2,new Position(7,0,6),true);
+        block[4] = new Cell(null,0,new Position(7,1,6),false);
+        block[5] = new Cell(null,8,new Position(7,2,6),true);
+        block[6] = new Cell(null,7,new Position(8,0,6),true);
+        block[7] = new Cell(null,0,new Position(8,1,6),false);
+        block[8] = new Cell(null,0,new Position(8,2,6),false);
+        Cell[] blockGets = Algoritm.blockGet(6, testTable.getMatrix());
+        for (int i = 0; i<9; i++){
+            Assertions.assertEquals(block[i].getValue(),blockGets[i].getValue());
+            Assertions.assertEquals(block[i].isDefaultValue(),blockGets[i].isDefaultValue());
+            Assertions.assertEquals(block[i].getPossibleVal(),blockGets[i].getPossibleVal());
+            Assertions.assertEquals(block[i].getPosition().getColumn(),blockGets[i].getPosition().getColumn());
+            Assertions.assertEquals(block[i].getPosition().getRow(),blockGets[i].getPosition().getRow());
+            Assertions.assertEquals(block[i].getPosition().getBlock(),blockGets[i].getPosition().getBlock());
+        }
+    }
+
+
 }

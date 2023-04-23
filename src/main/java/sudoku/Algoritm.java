@@ -1,9 +1,12 @@
 package sudoku;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Iterator;
 import java.util.Set;
 /** основное наше решение */
-
+@Getter@Setter
 public class Algoritm {
     private Cell[][] matrix;
     private Column[] columns;
@@ -12,28 +15,30 @@ public class Algoritm {
     private int valuesSet;
     private int valuesSetBefore;
 
-    public static Cell[] rowGet(int j, Cell[][] matrix){
+    public static Cell[] columnGet(int j, Cell[][] matrix){
         Cell[]  row =  new Cell[9];
         for (int i = 0; i < matrix.length; i++){
             row[i] = matrix[i][j];
         }
         return  row;
     }
-    public Cell[] blockGet(int i, Cell[][] matrix){
+    public static Cell[] blockGet(int i, Cell[][] matrix){
         int size = matrix.length / 3;
         int rowBlock = i / size;
         int columnBlock = i % size;
         Cell[] block = new Cell[matrix.length];
         int count = 0;
-        for (int row = rowBlock * 3; row < matrix.length; row++){
-            for (int column = columnBlock * 3; column < matrix.length; column++){
+        int endRow = rowBlock*3 +3;
+        int endColumn = columnBlock*3 +3;
+        for (int row = rowBlock * 3; row <endRow ; row++){
+            for (int column = columnBlock * 3; column < endColumn; column++){
                 block[count] = matrix[row][column];
                 count++;
             }
         }
         return block;
     }
-    public Cell[] columnGet(int i,Cell[][] matrix){
+    public static Cell[] rowGet(int i, Cell[][] matrix){
         return matrix[i];
     }
     /** Возвращает множество значений, которых нет в нашей строке ( столбце, блоке) */
@@ -80,17 +85,17 @@ public class Algoritm {
         }
     }
     /** создает из двумерного массива чисел, массив ячеек, служит для удобства ввода */
-    public static Cell[][] createMatrix(int[][] table){
-        Cell[][] matrix = new Cell[9][9];
+    public  void createMatrix(int[][] table){
+        Cell[][] matrixnew = new Cell[9][9];
         for(int i = 0; i<table.length;i++){
             for (int j = 0; j<table.length;j++){
                 boolean isDefaultValue = true;
                 if (table[i][j] == 0){
                     isDefaultValue = false;
                 }
-                matrix[i][j] = new Cell(null,table[i][j],new Position(i,j,i%3+3*(j%3)),isDefaultValue);
+                matrixnew[i][j] = new Cell(null,table[i][j],new Position(i,j,i/3 * 3+j/3),isDefaultValue);
             }
         }
-        return matrix;
+        matrix = matrixnew;
     }
 }
