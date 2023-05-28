@@ -41,6 +41,7 @@ public class Main {
                         }
                         table[i] = intZnach;
 
+
                     }
                     sudoku.createMatrix(table);
                     sudoku.guess();
