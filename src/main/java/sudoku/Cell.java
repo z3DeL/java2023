@@ -16,5 +16,6 @@ public class Cell {
     private HashSet<Integer> possibleVal;
     private int value;
     private Position position;
-    private boolean defaultValue;
+    private int depth;
+    private boolean guess;
 }

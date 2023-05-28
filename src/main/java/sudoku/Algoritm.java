@@ -11,6 +11,7 @@ public class Algoritm {
     private Cell[][] matrix;
     private int valuesSet;
     private int valuesSetBefore;
+    private int depth;
 
     public static Cell[] columnGet(int j, Cell[][] matrix){
         Cell[]  row =  new Cell[9];
@@ -61,13 +62,13 @@ public class Algoritm {
             possibleValue.addAll(possibleRow);
             possibleValue.retainAll(possibleColumn);
             possibleValue.retainAll(possibleBlock);
-            if (possibleValue.size() == 1 && !cell.isDefaultValue()){
+            if (possibleValue.size() == 1 && cell.getDepth() == 0){
                 Iterator<Integer> iter = possibleValue.iterator();
-                Cell newCell = new Cell(possibleValue,iter.next(),cell.getPosition(),true);
+                Cell newCell = new Cell(possibleValue,iter.next(),cell.getPosition(),depth,false);
                 matrix[cell.getPosition().getRow()][cell.getPosition().getColumn()] = newCell;
-            }
-            else{
-                Cell newCell = new Cell(possibleValue,cell.getValue(),cell.getPosition(),cell.isDefaultValue());
+            } else if (!cell.isGuess())
+        {
+                Cell newCell = new Cell(possibleValue,cell.getValue(),cell.getPosition(),cell.getDepth(),false);
                 matrix[cell.getPosition().getRow()][cell.getPosition().getColumn()] = newCell;
             }
     }
@@ -84,18 +85,19 @@ public class Algoritm {
         Cell[][] matrixnew = new Cell[9][9];
         for(int i = 0; i<table.length;i++){
             for (int j = 0; j<table.length;j++){
-                boolean isDefaultValue = true;
+                int isDefaultValue = 1;
                 if (table[i][j] == 0){
-                    isDefaultValue = false;
+                    isDefaultValue = 0;
                 }
-                matrixnew[i][j] = new Cell(null,table[i][j],new Position(i,j,i/3 * 3+j/3),isDefaultValue);
+                matrixnew[i][j] = new Cell(null,table[i][j],new Position(i,j,i/3 * 3+j/3),isDefaultValue,false);
             }
         }
         matrix = matrixnew;
     }
     public void setValueBasedPreValues(){
         for (Cell[] str: matrix){
-            for (Cell cell: str){
+           for (Cell cell: str){
+               if (!cell.isGuess() && cell.getDepth() == 0){
                 HashSet<Integer> unionRow = new HashSet<Integer>();
                 HashSet<Integer> unionColumn = new HashSet<Integer>();
                 HashSet<Integer> unionBlock = new HashSet<Integer>();
@@ -123,22 +125,22 @@ public class Algoritm {
                 newPossibleValRow.removeAll(intesectionRow);
                 newPossibleValColumn.removeAll(intesectionColumn);
                 newPossibleValBlock.removeAll(intesectionBlock);
-                if (newPossibleValRow.size() == 1 && !cell.isDefaultValue()){
+                if (newPossibleValRow.size() == 1 && cell.getDepth() == 0){
                     Iterator<Integer> iter = newPossibleValRow.iterator();
-                    Cell newcell = new Cell(cell.getPossibleVal(),iter.next(),cell.getPosition(),true);
-                    matrix[cell.getPosition().getRow()][cell.getPosition().getRow()] = newcell;
-                } else if (newPossibleValColumn.size() == 1 && !cell.isDefaultValue()) {
+                    Cell newcell = new Cell(cell.getPossibleVal(),iter.next(),cell.getPosition(),depth,false);
+                    matrix[cell.getPosition().getRow()][cell.getPosition().getColumn()] = newcell;
+                } else if (newPossibleValColumn.size() == 1 && cell.getDepth() == 0) {
                     Iterator<Integer> iter = newPossibleValColumn.iterator();
-                    Cell newcell = new Cell(cell.getPossibleVal(),iter.next(),cell.getPosition(),true);
-                    matrix[cell.getPosition().getRow()][cell.getPosition().getRow()] = newcell;
+                    Cell newcell = new Cell(cell.getPossibleVal(),iter.next(),cell.getPosition(),depth,false);
+                    matrix[cell.getPosition().getRow()][cell.getPosition().getColumn()] = newcell;
 
-                } else if (newPossibleValBlock.size() == 1 && !cell.isDefaultValue()) {
+                } else if (newPossibleValBlock.size() == 1 && cell.getDepth() == 0) {
                     Iterator<Integer> iter = newPossibleValBlock.iterator();
-                    Cell newcell = new Cell(cell.getPossibleVal(),iter.next(),cell.getPosition(),true);
-                    matrix[cell.getPosition().getRow()][cell.getPosition().getRow()] = newcell;
+                    Cell newcell = new Cell(cell.getPossibleVal(),iter.next(),cell.getPosition(),depth,false);
+                    matrix[cell.getPosition().getRow()][cell.getPosition().getColumn()] = newcell;
                 }
             }
-        }
+        }}
     }
     public void printMatrix(){
         for (int i = 0; i < 9; i++) {
@@ -147,5 +149,119 @@ public class Algoritm {
             }
             System.out.println();
         }
+        System.out.println();
     }
+    public static Cell[][] copy(Cell[][] src) {
+        if (src == null) {
+            return null;
+        }
+
+        Cell[][] copy = new Cell[src.length][];
+
+        for (int i = 0; i < src.length; i++) {
+            copy[i] = new Cell[src[i].length];
+            System.arraycopy(src[i], 0, copy[i], 0, src[i].length);
+        }
+
+        return copy;
+    }
+    public boolean matrixCompare(Cell[][] matrix1,Cell[][] matrix2){
+        for (int i = 0;i<9;i++){
+            for (int j =0;j<9;j++){
+                if (matrix1[i][j].getValue() != matrix2[i][j].getValue()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public boolean haveZeros(){
+        for (int i = 0;i<9;i++){
+            for (int j =0;j<9;j++){
+                if (matrix[i][j].getValue() == 0){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public void deleteDepth(){
+        for (int i = 0;i<9;i++){
+            for (int j =0;j<9;j++){
+                if (matrix[i][j].getDepth() == depth){
+                    matrix[i][j] = new Cell(null,0,matrix[i][j].getPosition(),0,false);
+
+                }
+            }
+        }
+    }
+    public boolean isCorrect(){
+        for (int i = 0;i<9;i++){
+            for (int j =0;j<9;j++){
+                if (matrix[i][j].getPossibleVal().size()<1 && matrix[i][j].getValue()<1){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public void nextGuess(){
+        for (int i = 0;i<9;i++){
+            for (int j =0;j<9;j++){
+                if (matrix[i][j].isGuess() && matrix[i][j].getDepth() == depth && matrix[i][j].getPossibleVal().size()>0) {
+                    Iterator<Integer> iter = matrix[i][j].getPossibleVal().iterator();
+                    int maybe = iter.next();
+                    HashSet<Integer> newPossible = matrix[i][j].getPossibleVal();
+                    newPossible.remove(maybe);
+                    Cell newcell = new Cell(newPossible,maybe,matrix[i][j].getPosition(),depth,true);
+                    deleteDepth();
+                    matrix[i][j] = newcell;
+                    return;
+                } else if (matrix[i][j].isGuess() && matrix[i][j].getDepth() == depth && matrix[i][j].getPossibleVal().size() ==0) {
+                   matrix[i][j] = new Cell(null,0,matrix[i][j].getPosition(),0,false);
+                   deleteDepth();
+                   setPreValuesForAll();
+                   depth -=1;
+                   nextGuess();
+                   return;
+                }
+            }
+        }
+        for (int i = 0;i<9;i++){
+            for (int j =0;j<9;j++){
+                if (matrix[i][j].getDepth() == 0) {
+                    Iterator<Integer> iter = matrix[i][j].getPossibleVal().iterator();
+                    int maybe = iter.next();
+                    HashSet<Integer> newPossible = matrix[i][j].getPossibleVal();
+                    newPossible.remove(maybe);
+                    Cell newcell = new Cell(newPossible,maybe,matrix[i][j].getPosition(),depth,true);
+                    matrix[i][j] = newcell;
+                    return;
+                }}
+        }
+    }
+    public void guess(){
+        setPreValuesForAll();
+        while (haveZeros()) {
+            Cell[][] oldMatrix = copy(matrix);
+            setPreValuesForAll();
+            setValueBasedPreValues();
+            setPreValuesForAll();
+            while (matrixCompare(matrix, oldMatrix)&& isCorrect()) {
+                oldMatrix = copy(matrix);
+                setPreValuesForAll();
+                setValueBasedPreValues();
+                setPreValuesForAll();
+            }
+            if (isCorrect() && haveZeros()){
+                depth +=1;
+                nextGuess();
+                setPreValuesForAll();
+            } else if (haveZeros()) {
+                nextGuess();
+                setPreValuesForAll();
+            }
+        }
+    }
+
 }
